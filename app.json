@@ -1,4 +1,7 @@
 {
   "name": "gym",
-  "displayName": "gym"
+  "displayName": "gym",
+  "plugins": [
+    "expo-secure-store"
+  ]
 }
