@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import AuthorizationScreen from '../screens/authorizationScreen';
 import ProfileScreen from '../screens/profileScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import CheckOtpScreen from '../screens/checkOtpScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -21,6 +22,11 @@ const MyStack = () => {
                     name = 'profile'
                     component = {ProfileScreen}
                     options = {{title: 'Profile'}}
+                />
+                <Stack.Screen
+                    name = 'checkOtpScreen'
+                    component = {CheckOtpScreen}
+                    options = {{title: 'check OTP'}}
                 />
             </Stack.Navigator>
         </NavigationContainer>

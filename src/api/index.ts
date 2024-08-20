@@ -20,10 +20,11 @@ export const signUp = async (email: string, password: string) => {
         email,
         password
     });
-    if (error) {
+    if (error ) {
         console.error('Sign Up Error:', error.message);
         return { user: null, error };
     }
+    
     return { user: data.user, error: null, session: data.session };
 }
 
@@ -37,6 +38,25 @@ export const signIn = async (email: string, password: string) => {
         return { user: null, error };
     }
     return { user: data.user, error: null, session: data.session };
+}
+
+export const checkOtp = async (otpCode: string, email: string) => {
+    const { data, error } = await supabase.auth.verifyOtp({
+        email: email,
+        token: otpCode,
+        type: 'signup',
+    })
+    if (error) {
+        console.error('Sign In Error:', error.message);
+        return { user: null, error };
+    }
+    await supabase
+        .from('users')
+        .update({ status: 'verified' })
+        .eq('email', email);
+
+    return { user: data, error: null }
+  
 }
 
 export const passRecovery = async (email: string) => {

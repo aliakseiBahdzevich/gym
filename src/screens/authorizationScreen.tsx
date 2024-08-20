@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { Linking } from 'react-native';
+import { createClient } from '@supabase/supabase-js'
+import { supabase } from '../api';;
+import { useState, useEffect } from 'react';
 import { View, TouchableOpacity, Text, TextInput, Alert } from 'react-native';
 import { passRecovery, signIn, signUp } from '../api';
 
 const AuthorizationScreen = ({ navigation }: any) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+        
 
     const forgetPass = async () => {
         try {
@@ -25,12 +29,17 @@ const AuthorizationScreen = ({ navigation }: any) => {
     const createAccountFun = async () => {
         try {
             const { user, error } = await signUp(email, password);
+            console.log('RESPONCE CREATE ACC', user);
             if (error) {
                 Alert.alert('Sign Up Error', error.message);
-            } else if (user) {
-                Alert.alert('Success', 'Registration successful!');
-                setTimeout(()=>navigation.navigate('profile'), 1000)
+            } 
+            if (!user?.email_confirmed_at) {
+                Alert.alert('Sign Up Error', ` шлюха! ${email}`,);
+                return; 
             }
+
+            Alert.alert('Success', `Registration successful! ${email}`,);
+            setTimeout(()=>navigation.navigate('checkOtpScreen', {email: email}), 1000)
             console.log(user)
         } 
         catch (error) {
