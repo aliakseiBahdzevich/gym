@@ -4,6 +4,7 @@ import AuthorizationScreen from '../screens/authorizationScreen';
 import ProfileScreen from '../screens/profileScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CheckOtpScreen from '../screens/checkOtpScreen';
+import CreateAccScreen from '../screens/createAccScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -26,7 +27,12 @@ const MyStack = () => {
                 <Stack.Screen
                     name = 'checkOtpScreen'
                     component = {CheckOtpScreen}
-                    options = {{title: 'check OTP'}}
+                    options = {{title: 'Check OTP'}}
+                />
+                <Stack.Screen
+                    name = 'createAccount'
+                    component = {CreateAccScreen}
+                    options = {{title: 'Create Account'}}
                 />
             </Stack.Navigator>
         </NavigationContainer>

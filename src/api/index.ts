@@ -15,6 +15,26 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
     },
 })
 
+export const getUser = async (email: string) => {
+    const { data, error } = await supabase.auth.getUser(email)
+    if (error ) {
+        console.error('Sign Up Error:', error.message);
+        return { user: null, error };
+    }
+    return {user: data.user, error: null}
+}
+
+export const setUser = async(id: string, name: string, surname: string, email: string) =>{
+    const { data, error } = await supabase
+        .from('users')
+        .insert([
+            { userID: id, name: name, surname: surname, email: email },
+        ])
+        .select()
+    return {user: data, error: null}
+}
+
+
 export const signUp = async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signUp({
         email,

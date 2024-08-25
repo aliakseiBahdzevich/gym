@@ -7,6 +7,7 @@ import { View, TouchableOpacity, Text, TextInput, Alert } from 'react-native';
 import { passRecovery, signIn, signUp } from '../api';
 
 const AuthorizationScreen = ({ navigation }: any) => {
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
         
@@ -26,40 +27,18 @@ const AuthorizationScreen = ({ navigation }: any) => {
         }
     }
 
-    const createAccountFun = async () => {
-        try {
-            const { user, error } = await signUp(email, password);
-            console.log('RESPONCE CREATE ACC', user);
-            if (error) {
-                Alert.alert('Sign Up Error', error.message);
-            } 
-            if (!user?.email_confirmed_at) {
-                Alert.alert('Sign Up Error', ` шлюха! ${email}`,);
-                return; 
-            }
-
-            Alert.alert('Success', `Registration successful! ${email}`,);
-            setTimeout(()=>navigation.navigate('checkOtpScreen', {email: email}), 1000)
-            console.log(user)
-        } 
-        catch (error) {
-            console.error('Unexpected Error:', error);
-            Alert.alert('Unexpected Error', 'Something went wrong!');
-        }
-        
-    };
-
     
     const logInAccountFun = async () => {
         try {
             const { user, error } = await signIn(email, password);
+            console.log(user)
             if (error) {
-                Alert.alert('Sign In Error', error.message);
-            } else if (user) {
-                Alert.alert('Success', 'Successful login!');
+                Alert.alert('Ошибка', 'неверные почта или пароль');
+            } 
+            else if (user) {
+                Alert.alert('Успешно', 'Вход выполнен!');
                 setTimeout(()=>navigation.navigate('profile'), 1000)
             }
-            console.log(user)
         } 
         catch (error) {
             console.error('Unexpected Error:', error);
@@ -84,31 +63,33 @@ const AuthorizationScreen = ({ navigation }: any) => {
             <TextInput
                 onChangeText={handleEmail}
                 value={email}
-                placeholder='Enter email'
+                placeholder='Введите почту'
                 placeholderTextColor='black'
-                style={{ borderBottomWidth: 1, marginBottom: 10 }}
+                style={{ borderBottomWidth: 1, marginBottom: 10, fontSize: 25 }}
             />
             <TextInput
                 onChangeText={handlePassword}
                 value={password}
-                placeholder='Enter password'
+                placeholder='Введите пароль'
                 placeholderTextColor='black'
                 secureTextEntry
-                style={{ borderBottomWidth: 1, marginBottom: 20 }}
+                style={{ borderBottomWidth: 1, marginBottom: 20, fontSize: 25  }}
             />
-            <TouchableOpacity onPress={logInAccountFun} style={{ backgroundColor: 'blue', padding: 10, marginBottom: 8, alignItems: 'center' }}>
-                <Text style={{ color: 'white' }}>LOGIN</Text>
+            <TouchableOpacity onPress={logInAccountFun} style={{ backgroundColor: 'blue', padding: 10, marginBottom: 8, alignItems: 'center', borderRadius: 8 }}>
+                <Text style={{ color: 'white', fontSize: 25, fontWeight: 'bold'  }}>ВОЙТИ</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={forgetPass} style={{ padding: 10, marginBottom: 8, alignItems: 'center', borderColor: 'clack', borderWidth: 1 }}>
-                <Text style={{ color: 'black' }}>Forgotten password?</Text>
+            <TouchableOpacity onPress={forgetPass} style={{ padding: 10, marginBottom: 8, alignItems: 'center', borderColor: 'clack', borderWidth: 1, borderRadius: 8 }}>
+                <Text style={{ color: 'black', fontSize: 25}}>Забыли пароль?</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={createAccountFun} style={{ backgroundColor: 'green', padding: 10, marginBottom: 8, alignItems: 'center'}}>
-                <Text style={{ color: 'white' }}>CREATE ACCOUNT</Text>
+            <TouchableOpacity onPress={()=>navigation.navigate('createAccount')} style={{ backgroundColor: 'green', padding: 10, marginBottom: 8, alignItems: 'center', borderRadius: 8 }}>
+                <Text style={{ color: 'white', fontSize: 25, fontWeight: 'bold'}}>СОЗДАТЬ АККАУНТ</Text>
             </TouchableOpacity>
         </View>
     );
 };
 
 export default AuthorizationScreen;
+
+
