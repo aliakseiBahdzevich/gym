@@ -24,11 +24,11 @@ export const getUser = async (email: string) => {
     return {user: data.user, error: null}
 }
 
-export const setUser = async(id: string, name: string, surname: string, email: string) =>{
+export const setUser = async(id: string, name: string, surname: string, email: string, date: string) =>{
     const { data, error } = await supabase
         .from('users')
         .insert([
-            { userID: id, name: name, surname: surname, email: email },
+            { userID: id, name: name, surname: surname, email: email, birthday: date },
         ])
         .select()
     return {user: data, error: null}

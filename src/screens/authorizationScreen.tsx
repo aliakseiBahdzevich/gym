@@ -65,7 +65,7 @@ const AuthorizationScreen = ({ navigation }: any) => {
                 value={email}
                 placeholder='Введите почту'
                 placeholderTextColor='black'
-                style={{ borderBottomWidth: 1, marginBottom: 10, fontSize: 25 }}
+                style={{ borderWidth: 1, marginBottom: 10, fontSize: 25, borderRadius: 8, padding: 10, borderColor: 'rgba(0, 0, 0, 0.6)'  }}
             />
             <TextInput
                 onChangeText={handlePassword}
@@ -73,10 +73,10 @@ const AuthorizationScreen = ({ navigation }: any) => {
                 placeholder='Введите пароль'
                 placeholderTextColor='black'
                 secureTextEntry
-                style={{ borderBottomWidth: 1, marginBottom: 20, fontSize: 25  }}
+                style={{ borderWidth: 1, marginBottom: 10, fontSize: 25, borderRadius: 8, padding: 10, borderColor: 'rgba(0, 0, 0, 0.6)'  }}
             />
             <TouchableOpacity onPress={logInAccountFun} style={{ backgroundColor: 'blue', padding: 10, marginBottom: 8, alignItems: 'center', borderRadius: 8 }}>
-                <Text style={{ color: 'white', fontSize: 25, fontWeight: 'bold'  }}>ВОЙТИ</Text>
+                <Text style={{ color: 'white', fontSize: 25, fontWeight: '600'  }}>ВОЙТИ</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={forgetPass} style={{ padding: 10, marginBottom: 8, alignItems: 'center', borderColor: 'clack', borderWidth: 1, borderRadius: 8 }}>
@@ -84,7 +84,7 @@ const AuthorizationScreen = ({ navigation }: any) => {
             </TouchableOpacity>
 
             <TouchableOpacity onPress={()=>navigation.navigate('createAccount')} style={{ backgroundColor: 'green', padding: 10, marginBottom: 8, alignItems: 'center', borderRadius: 8 }}>
-                <Text style={{ color: 'white', fontSize: 25, fontWeight: 'bold'}}>СОЗДАТЬ АККАУНТ</Text>
+                <Text style={{ color: 'white', fontSize: 25, fontWeight: '600'}}>СОЗДАТЬ АККАУНТ</Text>
             </TouchableOpacity>
         </View>
     );
