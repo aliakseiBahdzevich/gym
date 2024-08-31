@@ -45,22 +45,25 @@ const CreateAccScreen = ({navigation}: any) => {
     const createAccountFun = async () => {
         try {
             const { user, error } = await signUp(email, password);
-            console.log('RESPONCE CREATE ACC', user);
             if (error) {
-                Alert.alert('Ошибка', error.message);
+                if(error.message==='Password should be at least 6 characters.'){
+                    Alert.alert('Ошибка', 'Минимальная длина пароля 6 символов');
+                    return;
+                }
+                Alert.alert('Ошибка', 'Заполните все поля');
                 return;
             } 
             else if (!user?.role) {
                 Alert.alert('Укажите другую почту', `аккаунт с почтой ${email} уже существует!`,);
                 return; 
             }
-            Alert.alert('Успешно', `Ваш аккаунт создан! ${email}`,);
+            Alert.alert('Успешно', 'На Вашу почту выслан 6-значный код для создания аккаунта!');
             setTimeout(()=>navigation.navigate('checkOtpScreen', {email: email, id: user.id, name: name, surname: surname, date: date.toISOString()}), 1000)
             console.log(user)
         } 
         catch (error) {
-            console.error('Unexpected Error:', error);
-            Alert.alert('Unexpected Error', 'Something went wrong!');
+            console.error('Неизвестная ошибка:', error);
+            Alert.alert('Неизвестная ошибка', 'Что-то пошло не так!');
         }
         
     };
@@ -68,23 +71,26 @@ const CreateAccScreen = ({navigation}: any) => {
     return(
         <View style={{ padding: 20 }}>
             <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                <Text style = {{fontSize: 30, fontWeight: '700', fontFamily: 'helvetica'}}>Заполните информацию о себе</Text>
+            </View>
+            <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                 <TextInput
                     onChangeText={handleName}
                     value={name}
                     placeholder='имя'
                     placeholderTextColor='rgba(0, 0, 0, 0.6)'
-                    style={{ flex: 1, borderWidth: 1, fontSize: 25, borderRadius: 8, padding: 10, borderColor: 'rgba(0, 0, 0, 0.6)', marginRight: 5 }}
+                    style={{ flex: 1, borderWidth: 1, fontSize: 25, borderRadius: 8, padding: 10, borderColor: 'rgba(0, 0, 0, 0.6)', marginRight: 5, fontFamily: 'helvetica' }}
                 />
                 <TextInput
                     onChangeText={handleSurname}
                     value={surname}
                     placeholder='фамилия'
                     placeholderTextColor='rgba(0, 0, 0, 0.6)'
-                    style={{ flex: 1, borderWidth: 1, fontSize: 25, borderRadius: 8, padding: 10, borderColor: 'rgba(0, 0, 0, 0.6)', marginLeft: 5 }}
+                    style={{ flex: 1, borderWidth: 1, fontSize: 25, borderRadius: 8, padding: 10, borderColor: 'rgba(0, 0, 0, 0.6)', marginLeft: 5, fontFamily: 'helvetica' }}
                 />
             </View>
             <TouchableOpacity onPress={() => setOpen(true)} style={{ padding: 10, marginBottom: 8, borderRadius: 8, borderColor: 'rgba(0, 0, 0, 0.6)', borderWidth: 1}}>
-                {placeholder==='дата рождения' ? <Text style={{ color: 'rgba(0, 0, 0, 0.6)', fontSize: 25}}>{placeholder}</Text> : <Text style={{ color: 'rgba(0, 0, 0, 1)', fontSize: 25}}>{placeholder}</Text>}
+                {placeholder==='дата рождения' ? <Text style={{ color: 'rgba(0, 0, 0, 0.6)', fontSize: 25, fontFamily: 'helvetica'}}>{placeholder}</Text> : <Text style={{ color: 'rgba(0, 0, 0, 1)', fontSize: 25}}>{placeholder}</Text>}
             </TouchableOpacity>
             <DatePicker
                 modal
@@ -105,7 +111,7 @@ const CreateAccScreen = ({navigation}: any) => {
                 value={email}
                 placeholder='почта'
                 placeholderTextColor='rgba(0, 0, 0, 0.6)'
-                style={{ borderWidth: 1, marginBottom: 10, fontSize: 25, borderRadius: 8, padding: 10, borderColor: 'rgba(0, 0, 0, 0.6)'  }}
+                style={{ borderWidth: 1, marginBottom: 10, fontSize: 25, borderRadius: 8, padding: 10, borderColor: 'rgba(0, 0, 0, 0.6)', fontFamily: 'helvetica'  }}
             />
             <TextInput
                 onChangeText={handlePassword}
@@ -113,10 +119,10 @@ const CreateAccScreen = ({navigation}: any) => {
                 placeholder='пароль'
                 placeholderTextColor='rgba(0, 0, 0, 0.6)'
                 secureTextEntry
-                style={{ borderWidth: 1, marginBottom: 10, fontSize: 25, borderRadius: 8, padding: 10, borderColor: 'rgba(0, 0, 0, 0.6)'  }}
+                style={{ borderWidth: 1, marginBottom: 10, fontSize: 25, borderRadius: 8, padding: 10, borderColor: 'rgba(0, 0, 0, 0.6)', fontFamily: 'helvetica'  }}
             />
-            <TouchableOpacity onPress={createAccountFun} style={{ backgroundColor: 'green', padding: 10, marginBottom: 8, alignItems: 'center', borderRadius: 8}}>
-                <Text style={{ color: 'white', fontSize: 25, fontWeight: '600'}}>СОЗДАТЬ АККАУНТ</Text>
+            <TouchableOpacity onPress={createAccountFun} style={{ backgroundColor: '#046ef0', padding: 10, marginBottom: 8, alignItems: 'center', borderRadius: 8}}>
+                <Text style={{ color: 'white', fontSize: 30, fontWeight: '400', fontFamily: 'helvetica'}}>далее</Text>
             </TouchableOpacity>
         </View>
     )

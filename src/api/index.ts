@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { createClient } from '@supabase/supabase-js'
+import { EmailOtpType, MobileOtpType, createClient } from '@supabase/supabase-js'
 import 'react-native-get-random-values'
 import 'react-native-url-polyfill/auto'
 
@@ -14,6 +14,21 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
         detectSessionInUrl: false,
     },
 })
+
+export const checkUserExist = async (email: string) => {
+    const { data, error } = await supabase 
+        .from('users')
+        .select()
+        .eq('email', email)
+        .single();
+    if (error) {
+        console.error('Такого пользователя не существует:', error.message);
+        return false;
+    } 
+    else {
+        return true;
+    }
+}
 
 export const getUser = async (email: string) => {
     const { data, error } = await supabase.auth.getUser(email)
@@ -60,11 +75,11 @@ export const signIn = async (email: string, password: string) => {
     return { user: data.user, error: null, session: data.session };
 }
 
-export const checkOtp = async (otpCode: string, email: string) => {
+export const checkOtp = async (otpCode: string, email: string, type: 'recovery' | 'signup') => {
     const { data, error } = await supabase.auth.verifyOtp({
         email: email,
         token: otpCode,
-        type: 'signup',
+        type: type,
     })
     if (error) {
         console.error('Sign In Error:', error.message);
@@ -81,11 +96,23 @@ export const checkOtp = async (otpCode: string, email: string) => {
 
 export const passRecovery = async (email: string) => {
     const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+    console.log('data',data, error)
     if (error) {
         console.error('Sign In Error:', error.message);
         return { user: null, error };
     };
-    console.log("password",data)
+    return { user: data, error: null };
+}
+
+export const updateUser = async(email: string, newPassword: string) => {
+    const { data, error } = await supabase.auth.updateUser({
+        email: email,
+        password: newPassword,
+    })
+    if (error) {
+        console.error('Sign In Error:', error.message);
+        return { user: null, error };
+    };
     return { user: data, error: null };
 }
 
