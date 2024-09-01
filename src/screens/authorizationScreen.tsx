@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Linking } from 'react-native';
+import { Linking, StyleSheet } from 'react-native';
 import { createClient } from '@supabase/supabase-js'
 import { checkUserExist, supabase } from '../api';;
 import { useState, useEffect } from 'react';
@@ -10,6 +10,9 @@ const AuthorizationScreen = ({ navigation }: any) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [openEmail, setOpenEmail] = useState(Boolean)
+    const [openPass, setOpenPass] = useState(Boolean)
+
 
     const handleEmail = (inputText: any) => {
         const filteredText = inputText.replace(/\s/g, '');
@@ -26,7 +29,7 @@ const AuthorizationScreen = ({ navigation }: any) => {
             const { user, error } = await signIn(email, password);
             console.log(user)
             if (error) {
-                Alert.alert('Ошибка', 'неверные почта или пароль');
+                Alert.alert('Ошибка', 'Неверные почта или пароль');
             } 
             else if (user) {
                 Alert.alert('Успешно', 'Вход выполнен!');
@@ -41,39 +44,54 @@ const AuthorizationScreen = ({ navigation }: any) => {
     };
 
     return (
-        <View style={{ padding: 20 }}>
-            <View style={{ flexDirection: 'row', marginBottom: 10, justifyContent: 'center' }}>
-                <Text style = {{fontSize: 80, fontWeight: '900', fontFamily: 'helvetica'}}>GYM</Text>
+        <View style={styles.mainViewStyle}>
+            <View style={styles.viewStyle}>
+                <Text style = {styles.viewTextStyle}>GYM</Text>
             </View>
             <TextInput
                 onChangeText={handleEmail}
+                onFocus={() => setOpenEmail(true)}
+                onBlur={() => setOpenEmail(false)}
                 value={email}
                 placeholder='Введите почту'
-                placeholderTextColor='rgba(0, 0, 0, 0.6)'
-                style={{ borderWidth: 1, marginBottom: 10, fontSize: 25, borderRadius: 8, padding: 10, borderColor: 'rgba(0, 0, 0, 0.6)', fontFamily: 'helvetica'   }}
+                placeholderTextColor='rgba(0, 0, 0, 0.4)'
+                style={ openEmail ? [styles.inputTextStyle, {borderColor: 'black'}] : [styles.inputTextStyle, {borderColor: 'rgba(0, 0, 0, 0.4)'}]}
             />
             <TextInput
                 onChangeText={handlePassword}
+                onFocus={() => setOpenPass(true)}
+                onBlur={() => setOpenPass(false)}
                 value={password}
                 placeholder='Введите пароль'
-                placeholderTextColor='rgba(0, 0, 0, 0.6)'
+                placeholderTextColor='rgba(0, 0, 0, 0.4)'
                 secureTextEntry
-                style={{ borderWidth: 1, marginBottom: 10, fontSize: 25, borderRadius: 8, padding: 10, borderColor: 'rgba(0, 0, 0, 0.6)', fontFamily: 'helvetica' }}
+                style={ openPass ? [styles.inputTextStyle, {borderColor: 'black'}] : [styles.inputTextStyle, {borderColor: 'rgba(0, 0, 0, 0.4)'}]}
             />
-            <TouchableOpacity onPress={logInAccountFun} style={{ backgroundColor: '#f06204', padding: 10, marginBottom: 8, alignItems: 'center', borderRadius: 8 }}>
-                <Text style={{ color: 'white', fontSize: 30, fontWeight: '400', fontFamily: 'helvetica'}}>Войти</Text>
+            <TouchableOpacity onPress={logInAccountFun} style={[styles.opacityStyle, {backgroundColor: '#f06204'}]}>
+                <Text style={styles.opacityTextStyle}>Войти</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={()=>navigation.navigate('forgPassScreen')} style={{ padding: 10, marginBottom: 8, alignItems: 'center', borderColor: 'clack', borderWidth: 1, borderRadius: 8 }}>
-                <Text style={{ color: 'black', fontSize: 25, fontFamily: 'helvetica' }}>Забыли пароль?</Text>
+            <TouchableOpacity onPress={()=>navigation.navigate('forgPassScreen')} style={styles.passOpacityStyle}>
+                <Text style={styles.passTextOpacityStyle}>Забыли пароль?</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={()=>navigation.navigate('createAccount')} style={{ backgroundColor: '#046ef0', padding: 10, marginBottom: 8, alignItems: 'center', borderRadius: 8 }}>
-                <Text style={{ color: 'white', fontSize: 30, fontWeight: '400', fontFamily: 'helvetica'}}>Создать аккаунт</Text>
+            <TouchableOpacity onPress={()=>navigation.navigate('createAccount')} style={[styles.opacityStyle, {backgroundColor: '#046ef0'}]}>
+                <Text style={styles.opacityTextStyle}>Создать аккаунт</Text>
             </TouchableOpacity>
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    mainViewStyle: {padding: 20},
+    viewStyle: {flexDirection: 'row', marginBottom: 10, justifyContent: 'center'},
+    viewTextStyle: {fontSize: 80, fontWeight: '900', fontFamily: 'helvetica'},
+    inputTextStyle: {borderWidth: 1, marginBottom: 10, fontSize: 25, borderRadius: 15, padding: 10, fontFamily: 'helvetica'},
+    opacityStyle: {padding: 10, marginBottom: 8, alignItems: 'center', borderRadius: 25},
+    opacityTextStyle: { color: 'white', fontSize: 30, fontWeight: '400', fontFamily: 'helvetica'},
+    passOpacityStyle: {padding: 10, marginBottom: 8, alignItems: 'center', borderColor: 'black', borderWidth: 1, borderRadius: 25},
+    passTextOpacityStyle: {color: 'black', fontSize: 25, fontFamily: 'helvetica'}
+})
 
 export default AuthorizationScreen;
 

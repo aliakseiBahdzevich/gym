@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { ImageBackground, View, TouchableOpacity, Text, TextInput, Alert } from 'react-native';
+import { ImageBackground, View, TouchableOpacity, Text, TextInput, Alert, StyleSheet } from 'react-native';
 import { setUser, signUp } from '../api';
 import DatePicker from 'react-native-date-picker'
 
@@ -16,10 +16,15 @@ const CreateAccScreen = ({navigation}: any) => {
     const [date, setDate] = useState(new Date());
     const [placeholder, setPlaceholder] = useState('дата рождения');
     const [open, setOpen] = useState(false)
+    const [openName, setOpenName] = useState(Boolean)
+    const [openSurname, setOpenSurname] = useState(Boolean)
+    const [openEmail, setOpenEmail] = useState(Boolean)
+    const [openPass, setOpenPass] = useState(Boolean)
     const monthNames = [
         "января", "февряля", "марта", "апреля", "мая", "июня",
         "июля", "августа", "сентября", "октября", "ноября", "декабря"
     ];
+
 
     const handleName = (inputText: any) => {
         const filteredText = inputText.replace(/\s/g, '');
@@ -47,18 +52,28 @@ const CreateAccScreen = ({navigation}: any) => {
             const { user, error } = await signUp(email, password);
             if (error) {
                 if(error.message==='Password should be at least 6 characters.'){
-                    Alert.alert('Ошибка', 'Минимальная длина пароля 6 символов');
+                    Alert.alert('Ошибка', 'Минимальная длина пароля 6 символов!');
                     return;
                 }
-                Alert.alert('Ошибка', 'Заполните все поля');
-                return;
-            } 
+                else if(error.message==='Unable to validate email address: invalid format'){
+                    Alert.alert('Ошибка', 'Введите правильный формат почты!');
+                    return; 
+                }
+                else if(error.message==='Anonymous sign-ins are disabled'){
+                    Alert.alert('Ошибка', 'Заполните все поля!');
+                    return;
+                }
+                else if(error.message==='Error sending confirmation mail'){
+                    Alert.alert('Ошибка', 'Введите существующий адрес почты!');
+                    return;
+                }
+            }
             else if (!user?.role) {
-                Alert.alert('Укажите другую почту', `аккаунт с почтой ${email} уже существует!`,);
+                Alert.alert('Укажите другую почту', `Аккаунт с почтой ${email} уже существует!`,);
                 return; 
             }
             Alert.alert('Успешно', 'На Вашу почту выслан 6-значный код для создания аккаунта!');
-            setTimeout(()=>navigation.navigate('checkOtpScreen', {email: email, id: user.id, name: name, surname: surname, date: date.toISOString()}), 1000)
+            setTimeout(()=>navigation.navigate('checkOtpScreen', {email: email, id: user?.id, name: name, surname: surname, date: date.toISOString()}), 1000)
             console.log(user)
         } 
         catch (error) {
@@ -69,28 +84,34 @@ const CreateAccScreen = ({navigation}: any) => {
     };
 
     return(
-        <View style={{ padding: 20 }}>
-            <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                <Text style = {{fontSize: 30, fontWeight: '700', fontFamily: 'helvetica'}}>Заполните информацию о себе</Text>
+        <View style={styles.mainViewStyle}>
+            <View style={styles.viewHeaderStyle}>
+                <Text style = {styles.viewMainTextHeaderStyle}>Укажите информацию о себе</Text>
+                <Text style = {styles.viewTextHeaderStyle}>Заполните основные данные</Text>
             </View>
-            <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+            <View style={styles.viewNameStyle}>
                 <TextInput
                     onChangeText={handleName}
+                    onFocus={() => setOpenName(true)}
+                    onBlur={() => setOpenName(false)}
                     value={name}
                     placeholder='имя'
-                    placeholderTextColor='rgba(0, 0, 0, 0.6)'
-                    style={{ flex: 1, borderWidth: 1, fontSize: 25, borderRadius: 8, padding: 10, borderColor: 'rgba(0, 0, 0, 0.6)', marginRight: 5, fontFamily: 'helvetica' }}
+                    placeholderTextColor='rgba(0, 0, 0, 0.4)'
+                    style={ openName ? [styles.inputTextNameStyle, {borderColor: 'black'}] : [styles.inputTextNameStyle, {borderColor: 'rgba(0, 0, 0, 0.4)'}]}
                 />
+                <View style={{width: 8}}></View>
                 <TextInput
                     onChangeText={handleSurname}
+                    onFocus={() => setOpenSurname(true)}
+                    onBlur={() => setOpenSurname(false)}
                     value={surname}
                     placeholder='фамилия'
-                    placeholderTextColor='rgba(0, 0, 0, 0.6)'
-                    style={{ flex: 1, borderWidth: 1, fontSize: 25, borderRadius: 8, padding: 10, borderColor: 'rgba(0, 0, 0, 0.6)', marginLeft: 5, fontFamily: 'helvetica' }}
+                    placeholderTextColor='rgba(0, 0, 0, 0.4)'
+                    style={ openSurname ? [styles.inputTextNameStyle, {borderColor: 'black'}] : [styles.inputTextNameStyle, {borderColor: 'rgba(0, 0, 0, 0.4)'}]}
                 />
             </View>
-            <TouchableOpacity onPress={() => setOpen(true)} style={{ padding: 10, marginBottom: 8, borderRadius: 8, borderColor: 'rgba(0, 0, 0, 0.6)', borderWidth: 1}}>
-                {placeholder==='дата рождения' ? <Text style={{ color: 'rgba(0, 0, 0, 0.6)', fontSize: 25, fontFamily: 'helvetica'}}>{placeholder}</Text> : <Text style={{ color: 'rgba(0, 0, 0, 1)', fontSize: 25}}>{placeholder}</Text>}
+            <TouchableOpacity onPress={() => setOpen(true)} style={styles.opacityDateStyle}>
+                {placeholder==='дата рождения' ? <Text style={styles.opacityDefaultTextDateStyle}>{placeholder}</Text> : <Text style={styles.opacityCheckTextDateStyle}>{placeholder}</Text>}
             </TouchableOpacity>
             <DatePicker
                 modal
@@ -102,31 +123,47 @@ const CreateAccScreen = ({navigation}: any) => {
                     setDate(date)
                     setPlaceholder(date.getDate() + ' ' + (monthNames[date.getMonth()]) + ' ' + date.getFullYear() + 'г')
                 }}
-                onCancel={() => {
-                  setOpen(false)
-                }}
+                onCancel={() => {setOpen(false)}}
             />
             <TextInput
                 onChangeText={handleEmail}
+                onFocus={() => setOpenEmail(true)}
+                onBlur={() => setOpenEmail(false)}
                 value={email}
                 placeholder='почта'
-                placeholderTextColor='rgba(0, 0, 0, 0.6)'
-                style={{ borderWidth: 1, marginBottom: 10, fontSize: 25, borderRadius: 8, padding: 10, borderColor: 'rgba(0, 0, 0, 0.6)', fontFamily: 'helvetica'  }}
-            />
+                placeholderTextColor='rgba(0, 0, 0, 0.4)'
+                style={ openEmail ? [styles.inputTextStyle, {borderColor: 'black'}] : [styles.inputTextStyle, {borderColor: 'rgba(0, 0, 0, 0.4)'}]}
+                />
             <TextInput
                 onChangeText={handlePassword}
+                onFocus={() => setOpenPass(true)}
+                onBlur={() => setOpenPass(false)}
                 value={password}
                 placeholder='пароль'
-                placeholderTextColor='rgba(0, 0, 0, 0.6)'
+                placeholderTextColor='rgba(0, 0, 0, 0.4)'
                 secureTextEntry
-                style={{ borderWidth: 1, marginBottom: 10, fontSize: 25, borderRadius: 8, padding: 10, borderColor: 'rgba(0, 0, 0, 0.6)', fontFamily: 'helvetica'  }}
-            />
-            <TouchableOpacity onPress={createAccountFun} style={{ backgroundColor: '#046ef0', padding: 10, marginBottom: 8, alignItems: 'center', borderRadius: 8}}>
-                <Text style={{ color: 'white', fontSize: 30, fontWeight: '400', fontFamily: 'helvetica'}}>далее</Text>
+                style={ openPass ? [styles.inputTextStyle, {borderColor: 'black'}] : [styles.inputTextStyle, {borderColor: 'rgba(0, 0, 0, 0.4)'}]}
+                />
+            <TouchableOpacity onPress={createAccountFun} style={styles.opacityStyle}>
+                <Text style={styles.opacityTextStyle}>Далее</Text>
             </TouchableOpacity>
         </View>
     )
 }
 
+const styles = StyleSheet.create({
+    mainViewStyle: {padding: 20},
+    viewHeaderStyle: {flexDirection: 'column', marginBottom: 20},
+    viewMainTextHeaderStyle: {fontSize: 30, fontWeight: '700', fontFamily: 'helvetica'},
+    viewTextHeaderStyle: {fontSize: 20, fontWeight: '300', fontFamily: 'helvetica', paddingTop: 10},
+    viewNameStyle: {flexDirection: 'row', marginBottom: 10},
+    inputTextNameStyle: {flex: 1, borderWidth: 1, fontSize: 25, borderRadius: 15, padding: 10, fontFamily: 'helvetica'},
+    opacityDateStyle: { padding: 10, marginBottom: 8, borderRadius: 15, borderColor: 'rgba(0, 0, 0, 0.4)', borderWidth: 1},
+    opacityDefaultTextDateStyle: { color: 'rgba(0, 0, 0, 0.4)', fontSize: 25, fontFamily: 'helvetica'},
+    opacityCheckTextDateStyle: { color: 'rgba(0, 0, 0, 1)', fontSize: 25, fontFamily: 'helvetica'},
+    inputTextStyle: {borderWidth: 1, marginBottom: 10, fontSize: 25, borderRadius: 15, padding: 10, fontFamily: 'helvetica'},
+    opacityStyle: {backgroundColor: '#046ef0', padding: 10, marginBottom: 8, alignItems: 'center', borderRadius: 25},
+    opacityTextStyle: {color: 'white', fontSize: 30, fontWeight: '400', fontFamily: 'helvetica'}
+})
 
 export default CreateAccScreen

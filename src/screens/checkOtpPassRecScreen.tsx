@@ -20,7 +20,7 @@ const CheckOtpPassRecScreen = ({navigation, route}: any) => {
         try {
             const { user, error } = await checkOtp(otp, route.params.email, 'recovery');
             if (error) {
-                Alert.alert('Ошибка', 'неверный код');
+                Alert.alert('Ошибка', 'Неверный код');
             } else if (user) {
                 Alert.alert('Успешно', 'Код введен верно!');
                 setTimeout(()=>navigation.navigate('newPassScreen', {email: route.params.email}), 1000)
@@ -34,27 +34,36 @@ const CheckOtpPassRecScreen = ({navigation, route}: any) => {
 
     return(
         <View style={styles.viewStyle}>
-        <OtpInputs
-            autoFocus
-            handleChange={handleOtp}
-            numberOfInputs={6} 
-            autofillFromClipboard={false}
-            inputStyles={[styles.inputStyle]} 
-            inputContainerStyles={{ justifyContent: 'space-between', alignItems: 'center', flex: 1}} 
-            style={{ flexDirection: 'row', width: '100%'}}
-        />
-        <TouchableOpacity onPress={otpFun} style={styles.opacityStyle}>
-            <Text style={styles.textStyle}>SEND</Text>
-        </TouchableOpacity>
+            <View style={styles.viewHeaderStyle}>
+                <Text style = {styles.viewMainTextHeaderStyle}>На Вашу почту был отправлен код для восстановления пароля</Text>
+                <Text style = {styles.viewTextHeaderStyle}>Введите код в поле ввода</Text>
+            </View>
+            <OtpInputs
+                autoFocus
+                handleChange={handleOtp}
+                numberOfInputs={6} 
+                autofillFromClipboard={false}
+                inputStyles={styles.otpInputStyle} 
+                inputContainerStyles={styles.otpInputContStyle} 
+                style={styles.otpStyle}
+            />
+            <TouchableOpacity onPress={otpFun} style={styles.opacityStyle}>
+                <Text style={styles.opacityTextStyle}>Отправить</Text>
+            </TouchableOpacity>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     viewStyle: {padding: 20, flex: 1},
-    opacityStyle: { backgroundColor: 'blue', padding: 10, marginTop: 8, alignItems: 'center', borderRadius: 8 },
-    textStyle: { color: 'white', fontSize: 25, fontWeight: '600' }, 
-    inputStyle: { borderWidth: 1, fontSize: 25, borderRadius: 8, borderColor: 'rgba(0, 0, 0, 0.6)', width: 50, height: 50, alignItems: 'center', justifyContent: 'space-between', textAlign: 'center' }
+    viewHeaderStyle: {flexDirection: 'column', marginBottom: 20},
+    viewMainTextHeaderStyle: {fontSize: 30, fontWeight: '700', fontFamily: 'helvetica'},
+    viewTextHeaderStyle: {fontSize: 20, fontWeight: '300', fontFamily: 'helvetica', paddingTop: 10},
+    opacityStyle: { backgroundColor: '#046ef0', padding: 10, marginTop: 8, alignItems: 'center', borderRadius: 25 },
+    opacityTextStyle: { color: 'white', fontSize: 30, fontWeight: '400', fontFamily: 'helvetica' }, 
+    otpInputStyle: { borderWidth: 1, fontSize: 25, borderRadius: 8, borderColor: 'rgba(0, 0, 0, 0.6)', width: 50, height: 50, alignItems: 'center', justifyContent: 'space-between', textAlign: 'center', fontFamily: 'helvetica' },
+    otpInputContStyle: {justifyContent: 'space-between', alignItems: 'center', flex: 1},
+    otpStyle: {flexDirection: 'row', width: '100%'}
 })
 
 
