@@ -15,7 +15,7 @@ const ForgPassScreen = ({ navigation }: any) => {
 
     const handleEmail = (inputText: any) => {
         const filteredText = inputText.replace(/\s/g, '');
-        setEmail(filteredText);
+        setEmail(filteredText.toLowerCase());
     };
 
     const forgetPass = async () => {

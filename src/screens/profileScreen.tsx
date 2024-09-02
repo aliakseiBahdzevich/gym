@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 import { ImageBackground, View, TouchableOpacity, Text } from 'react-native';
+import { supabase } from '../api';
 
 
 const ProfileScreen = ({navigation}: any) => {
@@ -16,6 +17,7 @@ const ProfileScreen = ({navigation}: any) => {
 
     return(
         <>
+        <TouchableOpacity onPress={()=>supabase.auth.signOut()}><Text>sdfsdf</Text></TouchableOpacity>
         <Text>esrr</Text>
         </>
     )

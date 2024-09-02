@@ -39,7 +39,7 @@ const CreateAccScreen = ({navigation}: any) => {
 
     const handleEmail = (inputText: any) => {
         const filteredText = inputText.replace(/\s/g, '');
-        setEmail(filteredText);
+        setEmail(filteredText.toLowerCase());
     };
 
     const handlePassword = (inputText: any) => {
