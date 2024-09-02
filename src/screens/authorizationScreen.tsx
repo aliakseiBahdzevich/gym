@@ -33,7 +33,7 @@ const AuthorizationScreen = ({ navigation }: any) => {
             } 
             else if (user) {
                 Alert.alert('Успешно', 'Вход выполнен!');
-                setTimeout(()=>navigation.navigate('profile'), 1000)
+                navigation.navigate('profile')
             }
         } 
         catch (error) {

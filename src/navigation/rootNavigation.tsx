@@ -8,25 +8,71 @@ import CreateAccScreen from '../screens/createAccScreen';
 import CheckOtpPassRecScreen from '../screens/checkOtpPassRecScreen';
 import NewPassScreen from '../screens/newPassScreen';
 import ForgPassScreen from '../screens/forgottenPassScreen';
+import { useAppDispatch, useAppSelector } from '../redux/store/hooks';
+import { supabase } from '../api';
+import { setSession } from '../redux/features/sessionSlice';
+import { ActivityIndicator, Text, View } from 'react-native';
 
 
 const Stack = createNativeStackNavigator();
 
 
 const MyStack = () => {
+
+    const session = useAppSelector(state => state.session.session)
+    const dispatch = useAppDispatch()
+    const [loading, setLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        setLoading(true)
+        const {data: authListener} = supabase.auth.onAuthStateChange((event, session) => {
+            if(session){
+                dispatch(setSession(true))
+            }
+            else{
+                dispatch(setSession(false))
+            }
+        })
+        const checkSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession()
+            if(session){
+                dispatch(setSession(true))
+            }
+            else{
+                dispatch(setSession(false))
+            }
+            setLoading(false)
+        }
+
+        checkSession();
+        return () => {
+            authListener.subscription.unsubscribe()
+        }
+
+    }, [])
+
+    if(loading) return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}><ActivityIndicator style={{alignSelf: 'center'}} size="large"/></View>
+
     return(
         <NavigationContainer>
+            { session ? 
             <Stack.Navigator>
-                <Stack.Screen
-                    name = 'authorization'
-                    component = {AuthorizationScreen}
-                    options = {{title: 'Authorization'}}
-                />                         
+                 
                 <Stack.Screen
                     name = 'profile'
                     component = {ProfileScreen}
                     options = {{title: 'Profile'}}
                 />
+            
+            </Stack.Navigator> 
+            :
+            <Stack.Navigator>
+
+                <Stack.Screen
+                    name = 'authorization'
+                    component = {AuthorizationScreen}
+                    options = {{title: 'Authorization'}}
+                />             
                 <Stack.Screen
                     name = 'checkOtpScreen'
                     component = {CheckOtpScreen}
@@ -51,8 +97,9 @@ const MyStack = () => {
                     name = 'forgPassScreen'
                     component = {ForgPassScreen}
                     options = {{title: 'Forgotten password'}}
-                />
+                />           
             </Stack.Navigator>
+        }   
         </NavigationContainer>
     )
 }

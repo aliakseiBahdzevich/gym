@@ -3,12 +3,10 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store/store'
 
 
-// Define a type for the slice state
 interface SessionState {
   session: boolean
 }
 
-// Define the initial state using that type
 const initialState: SessionState = {
   session: false,
 }

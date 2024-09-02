@@ -25,6 +25,8 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import { Provider } from 'react-redux';
+import { store } from './src/redux/store/store';
 
 
 type SectionProps = PropsWithChildren<{
@@ -34,7 +36,9 @@ type SectionProps = PropsWithChildren<{
 
 function App(): React.JSX.Element {
   return (
-    <MyStack/>
+    <Provider store={store}>
+      <MyStack/>
+    </Provider>
   );
 }
 
