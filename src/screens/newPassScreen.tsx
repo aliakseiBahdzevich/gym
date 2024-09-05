@@ -32,6 +32,7 @@ const NewPassScreen = ({navigation, route}: any) => {
                 Alert.alert('Ошибка', error.message);
             }
             Alert.alert('Успешно', 'Вы успешно сменили пароль!');
+            ()=>navigation.navigate('profile')
             console.log(user)
         } 
         catch (error) {

@@ -26,7 +26,10 @@ const MyStack = () => {
     React.useEffect(() => {
         setLoading(true)
         const {data: authListener} = supabase.auth.onAuthStateChange((event, session) => {
-            if(session){
+            if(event === 'PASSWORD_RECOVERY'){
+                dispatch(setSession(false))
+            }
+            else if(session){
                 dispatch(setSession(true))
             }
             else{
@@ -34,7 +37,7 @@ const MyStack = () => {
             }
         })
         const checkSession = async () => {
-            const { data: { session } } = await supabase.auth.getSession()
+            const { data: {session}} = await supabase.auth.getSession()
             if(session){
                 dispatch(setSession(true))
             }

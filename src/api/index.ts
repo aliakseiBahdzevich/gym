@@ -85,10 +85,11 @@ export const checkOtp = async (otpCode: string, email: string, type: 'recovery' 
         console.error('Sign In Error:', error.message);
         return { user: null, error };
     }
-    await supabase
-        .from('users')
-        .update({ status: 'verified' })
-        .eq('email', email);
+    
+    // await supabase
+    //     .from('users')
+    //     .update({ status: 'verified' })
+    //     .eq('email', email);
 
     return { user: data, error: null }
   

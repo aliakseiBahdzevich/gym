@@ -3,11 +3,13 @@ import { useState } from 'react';
 import { ImageBackground, View, TouchableOpacity, Text, TextInput, Alert, StyleSheet } from 'react-native';
 import { setUser, signUp } from '../api';
 import DatePicker from 'react-native-date-picker'
+import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 
 
 
 
 const CreateAccScreen = ({navigation}: any) => {
+    const [checked, setChecked] = useState('female')
     
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -110,6 +112,54 @@ const CreateAccScreen = ({navigation}: any) => {
                     style={ openSurname ? [styles.inputTextNameStyle, {borderColor: 'black'}] : [styles.inputTextNameStyle, {borderColor: 'rgba(0, 0, 0, 0.4)'}]}
                 />
             </View>
+            <View style={{
+        borderWidth: 2,             // Толщина границы
+        borderColor: 'black',       // Цвет границы
+        borderRadius: 10,           // Закругление углов                // Внутренний отступ
+        backgroundColor: '#f9f9f9', // Цвет фона контейнера
+        marginBottom: 10,
+        paddingVertical: 0,
+        paddingHorizontal: 0,
+    }}>
+                {/* <RadioForm 
+                    radio_props={[{value: 'male',  label: 'мужчина'}, {value: 'female', label: 'женщина'}]}
+                    initial={0}
+                    onPress={(value) => {setChecked(value)}}
+                    formHorizontal={true}
+                    labelHorizontal={true}
+                    buttonColor={'#869aab'}
+                    selectedButtonColor={'#046ef0'}
+                    animation={true}
+                    wrapStyle={{marginRight: 0}}
+                    labelStyle={{fontSize: 25, color: 'black', margin: 10}}
+                    buttonSize={25}
+                /> */}
+                <RadioForm
+                    radio_props={[{value: 'male',  label: 'мужчина'}, {value: 'female', label: 'женщина'}]}
+                    initial={0}
+                    onPress={(value) => setChecked(value)}
+                    formHorizontal={true}
+                    labelHorizontal={true}
+                    buttonColor={'#869aab'}
+                    selectedButtonColor={'#046ef0'}
+                    animation={true}
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        width: '100%'
+                    }}
+                    buttonSize={25}
+                    buttonOuterSize={40}
+                    labelStyle={{
+                        fontSize: 25,
+                        color: 'black'
+                    }}
+                    // buttonWrapStyle={{
+                    //     flex: 1,
+                    //     justifyContent: 'center',
+                    // }}
+            />
+            </View>
             <TouchableOpacity onPress={() => setOpen(true)} style={styles.opacityDateStyle}>
                 {placeholder==='дата рождения' ? <Text style={styles.opacityDefaultTextDateStyle}>{placeholder}</Text> : <Text style={styles.opacityCheckTextDateStyle}>{placeholder}</Text>}
             </TouchableOpacity>
@@ -158,7 +208,7 @@ const styles = StyleSheet.create({
     viewTextHeaderStyle: {fontSize: 20, fontWeight: '300', fontFamily: 'helvetica', paddingTop: 10},
     viewNameStyle: {flexDirection: 'row', marginBottom: 10},
     inputTextNameStyle: {flex: 1, borderWidth: 1, fontSize: 25, borderRadius: 15, padding: 10, fontFamily: 'helvetica'},
-    opacityDateStyle: { padding: 10, marginBottom: 8, borderRadius: 15, borderColor: 'rgba(0, 0, 0, 0.4)', borderWidth: 1},
+    opacityDateStyle: { padding: 10, marginBottom: 10, borderRadius: 15, borderColor: 'rgba(0, 0, 0, 0.4)', borderWidth: 1},
     opacityDefaultTextDateStyle: { color: 'rgba(0, 0, 0, 0.4)', fontSize: 25, fontFamily: 'helvetica'},
     opacityCheckTextDateStyle: { color: 'rgba(0, 0, 0, 1)', fontSize: 25, fontFamily: 'helvetica'},
     inputTextStyle: {borderWidth: 1, marginBottom: 10, fontSize: 25, borderRadius: 15, padding: 10, fontFamily: 'helvetica'},

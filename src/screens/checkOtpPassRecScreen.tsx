@@ -23,7 +23,7 @@ const CheckOtpPassRecScreen = ({navigation, route}: any) => {
                 Alert.alert('Ошибка', 'Неверный код');
             } else if (user) {
                 Alert.alert('Успешно', 'Код введен верно!');
-                setTimeout(()=>navigation.navigate('newPassScreen', {email: route.params.email}), 1000)
+                navigation.navigate('newPassScreen', {email: route.params.email})
             }
         } 
         catch (error) {

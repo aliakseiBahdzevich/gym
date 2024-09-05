@@ -22,8 +22,9 @@ const ForgPassScreen = ({ navigation }: any) => {
         const userExist = await checkUserExist(email)
         if (userExist){
             const { error } = await passRecovery(email);
-            if (error) {
-                Alert.alert('Ошибка', error.message);
+            if (error?.message==='For security purposes, you can only request this once every 60 seconds') {
+                Alert.alert('Ошибка', 'Запрос уже был выполнен ранее, пожалуйста, подождите 60 секунд');
+                return
             }
             Alert.alert('Успешно', 'На вашу почту выслан 6-значный код для восстановления пароля!');
             setTimeout(()=>navigation.navigate('checkOtpPassRec', {email: email}), 1000)
