@@ -112,28 +112,7 @@ const CreateAccScreen = ({navigation}: any) => {
                     style={ openSurname ? [styles.inputTextNameStyle, {borderColor: 'black'}] : [styles.inputTextNameStyle, {borderColor: 'rgba(0, 0, 0, 0.4)'}]}
                 />
             </View>
-            <View style={{
-        borderWidth: 2,             // Толщина границы
-        borderColor: 'black',       // Цвет границы
-        borderRadius: 10,           // Закругление углов                // Внутренний отступ
-        backgroundColor: '#f9f9f9', // Цвет фона контейнера
-        marginBottom: 10,
-        paddingVertical: 0,
-        paddingHorizontal: 0,
-    }}>
-                {/* <RadioForm 
-                    radio_props={[{value: 'male',  label: 'мужчина'}, {value: 'female', label: 'женщина'}]}
-                    initial={0}
-                    onPress={(value) => {setChecked(value)}}
-                    formHorizontal={true}
-                    labelHorizontal={true}
-                    buttonColor={'#869aab'}
-                    selectedButtonColor={'#046ef0'}
-                    animation={true}
-                    wrapStyle={{marginRight: 0}}
-                    labelStyle={{fontSize: 25, color: 'black', margin: 10}}
-                    buttonSize={25}
-                /> */}
+            <View style={{marginBottom: 10}}>
                 <RadioForm
                     radio_props={[{value: 'male',  label: 'мужчина'}, {value: 'female', label: 'женщина'}]}
                     initial={0}
@@ -154,11 +133,7 @@ const CreateAccScreen = ({navigation}: any) => {
                         fontSize: 25,
                         color: 'black'
                     }}
-                    // buttonWrapStyle={{
-                    //     flex: 1,
-                    //     justifyContent: 'center',
-                    // }}
-            />
+                />
             </View>
             <TouchableOpacity onPress={() => setOpen(true)} style={styles.opacityDateStyle}>
                 {placeholder==='дата рождения' ? <Text style={styles.opacityDefaultTextDateStyle}>{placeholder}</Text> : <Text style={styles.opacityCheckTextDateStyle}>{placeholder}</Text>}
