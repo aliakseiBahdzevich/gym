@@ -9,7 +9,7 @@ import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-
 
 
 const CreateAccScreen = ({navigation}: any) => {
-    const [checked, setChecked] = useState('female')
+    const [gender, setGender] = useState('мужской')
     
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -48,7 +48,7 @@ const CreateAccScreen = ({navigation}: any) => {
         const filteredText = inputText.replace(/\s/g, '');
         setPassword(filteredText);
     };
-
+    console.log(gender);
     const createAccountFun = async () => {
         try {
             const { user, error } = await signUp(email, password);
@@ -75,7 +75,7 @@ const CreateAccScreen = ({navigation}: any) => {
                 return; 
             }
             Alert.alert('Успешно', 'На Вашу почту выслан 6-значный код для создания аккаунта!');
-            setTimeout(()=>navigation.navigate('checkOtpScreen', {email: email, id: user?.id, name: name, surname: surname, date: date.toISOString()}), 1000)
+            navigation.navigate('checkOtpScreen', {email: email, id: user?.id, name: name, surname: surname, date: date.toISOString(), gender: gender})
             console.log(user)
         } 
         catch (error) {
@@ -113,10 +113,11 @@ const CreateAccScreen = ({navigation}: any) => {
                 />
             </View>
             <View style={{marginBottom: 10}}>
+               
                 <RadioForm
-                    radio_props={[{value: 'male',  label: 'мужчина'}, {value: 'female', label: 'женщина'}]}
+                    radio_props={[{value: 'мужской',  label: 'мужчина'}, {value: 'женский', label: 'женщина'}]}
                     initial={0}
-                    onPress={(value) => setChecked(value)}
+                    onPress={setGender}
                     formHorizontal={true}
                     labelHorizontal={true}
                     buttonColor={'#869aab'}

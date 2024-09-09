@@ -11,6 +11,7 @@ const CheckOtpScreen = ({navigation, route}: any) => {
 
     const [otp, setOtp] = useState('');
 
+
     const handleOtp = (inputText: any) => {
         const filteredText = inputText.replace(/\s/g, '');
         setOtp(filteredText);
@@ -23,8 +24,10 @@ const CheckOtpScreen = ({navigation, route}: any) => {
                 Alert.alert('Ошибка', 'Неверный код');
             } else if (user) {
                 Alert.alert('Успешно', 'Регистрация прошла успешно!');
-                setTimeout(()=>navigation.navigate('profile'), 1000)
-                setUser(route.params.id, route.params.name, route.params.surname, route.params.email, route.params.date);
+                
+                setTimeout(()=>{navigation.navigate('profile'); 
+                    setUser(route.params.id, route.params.name, route.params.surname, route.params.email, route.params.date, route.params.gender);
+                }, 1000);
             }
         } 
         catch (error) {

@@ -36,7 +36,7 @@ type SectionProps = PropsWithChildren<{
 
 function App(): React.JSX.Element {
   return (
-    <Provider store={store}>
+    <Provider store={store} >
       <MyStack/>
     </Provider>
   );

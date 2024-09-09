@@ -26,7 +26,6 @@ const NewPassScreen = ({navigation, route}: any) => {
 
     const newPassword = async () => {
         try {
-            console.log(route.params.email)
             const { user, error } = await updateUser(route.params.email, password);
             if (error) {
                 Alert.alert('Ошибка', error.message);

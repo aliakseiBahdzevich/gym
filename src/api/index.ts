@@ -6,6 +6,14 @@ import 'react-native-url-polyfill/auto'
 const supabaseUrl = 'https://zfousekokwvlzswkizbq.supabase.co'
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpmb3VzZWtva3d2bHpzd2tpemJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjQwNjc1MTcsImV4cCI6MjAzOTY0MzUxN30.kRjQUzrpbMirGhbmR46uHqgXZCMWiHiIorCvawh7ZOY'
 
+export type User = {
+    email: string,
+    name: string,
+    surname: string,
+    birthday: string,
+    gender: string
+}
+
 export const supabase = createClient(supabaseUrl, supabaseKey, {
     auth: {
         storage: AsyncStorage,
@@ -22,7 +30,6 @@ export const checkUserExist = async (email: string) => {
         .eq('email', email)
         .single();
     if (error) {
-        console.error('Такого пользователя не существует:', error.message);
         return false;
     } 
     else {
@@ -30,20 +37,30 @@ export const checkUserExist = async (email: string) => {
     }
 }
 
-export const getUser = async (email: string) => {
-    const { data, error } = await supabase.auth.getUser(email)
-    if (error ) {
-        console.error('Sign Up Error:', error.message);
-        return { user: null, error };
+export const getUser = async () => {
+    const { data: {user}, error: getUserError } = await supabase.auth.getUser()
+    if (getUserError) {
+        return { user: null, error: getUserError };
     }
-    return {user: data.user, error: null}
+
+    const { data: fullUserInfo, error } = await supabase 
+        .from('users')
+        .select('*')
+        .eq('email', user?.email)
+        if (error) {
+            return { user: null, error };
+        } 
+        else {
+            const responce: {user: User, error: any} = { user: fullUserInfo[0], error: null }; 
+            return responce;
+        }
 }
 
-export const setUser = async(id: string, name: string, surname: string, email: string, date: string) =>{
+export const setUser = async(id: string, name: string, surname: string, email: string, date: string, gender: string) =>{
     const { data, error } = await supabase
         .from('users')
         .insert([
-            { userID: id, name: name, surname: surname, email: email, birthday: date },
+            { userID: id, name: name, surname: surname, email: email, birthday: date, gender: gender },
         ])
         .select()
     return {user: data, error: null}
@@ -56,7 +73,6 @@ export const signUp = async (email: string, password: string) => {
         password
     });
     if (error ) {
-        console.error('Sign Up Error:', error.message);
         return { user: null, error };
     }
     
@@ -69,7 +85,6 @@ export const signIn = async (email: string, password: string) => {
         password
     });
     if (error) {
-        console.error('Sign In Error:', error.message);
         return { user: null, error };
     }
     return { user: data.user, error: null, session: data.session };
@@ -82,14 +97,8 @@ export const checkOtp = async (otpCode: string, email: string, type: 'recovery' 
         type: type,
     })
     if (error) {
-        console.error('Sign In Error:', error.message);
         return { user: null, error };
     }
-    
-    // await supabase
-    //     .from('users')
-    //     .update({ status: 'verified' })
-    //     .eq('email', email);
 
     return { user: data, error: null }
   
@@ -97,9 +106,7 @@ export const checkOtp = async (otpCode: string, email: string, type: 'recovery' 
 
 export const passRecovery = async (email: string) => {
     const { data, error } = await supabase.auth.resetPasswordForEmail(email);
-    console.log('data',data, error)
     if (error) {
-        console.error('Sign In Error:', error.message);
         return { user: null, error };
     };
     return { user: data, error: null };
@@ -111,7 +118,6 @@ export const updateUser = async(email: string, newPassword: string) => {
         password: newPassword,
     })
     if (error) {
-        console.error('Sign In Error:', error.message);
         return { user: null, error };
     };
     return { user: data, error: null };
