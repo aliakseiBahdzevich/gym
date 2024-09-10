@@ -47,7 +47,7 @@ const ForgPassScreen = ({ navigation }: any) => {
                 value={email}
                 placeholder='почта'
                 placeholderTextColor='rgba(0, 0, 0, 0.4)'
-                style={ openEmail ? [styles.inputTextStyle, {borderColor: 'black'}] : [styles.inputTextStyle, {borderColor: 'rgba(0, 0, 0, 0.4)'}]}
+                style={ openEmail ? [styles.inputTextStyle, {borderColor: 'black', borderWidth: 1}] : styles.inputTextStyle}
             />
             <TouchableOpacity onPress={forgetPass} style={styles.opacityStyle}>
                 <Text style={styles.opacityTextStyle}>Далее</Text>
@@ -58,12 +58,35 @@ const ForgPassScreen = ({ navigation }: any) => {
 };
 
 const styles = StyleSheet.create({
-    mainViewStyle: {padding: 20},
+    mainViewStyle: {padding: 20, backgroundColor: 'rgba(239,238,244,255)'},
     viewHeaderStyle: {flexDirection: 'column', marginBottom: 20},
     viewMainTextHeaderStyle: {fontSize: 30, fontWeight: '700', fontFamily: 'helvetica'},
     viewTextHeaderStyle: {fontSize: 20, fontWeight: '300', fontFamily: 'helvetica', paddingTop: 10},
-    inputTextStyle: {borderWidth: 1, marginBottom: 10, fontSize: 25, borderRadius: 15, padding: 10, fontFamily: 'helvetica'},
-    opacityStyle: {backgroundColor: '#046ef0', padding: 10, marginBottom: 8, alignItems: 'center', borderRadius: 25},
+    inputTextStyle: {
+        marginBottom: 10,
+        fontSize: 25,
+        borderRadius: 15,
+        padding: 10, 
+        fontFamily: 'helvetica',
+        backgroundColor: 'white',
+        shadowColor: 'black', // Цвет тени
+        shadowOffset: { width: 0, height: 4 }, // Смещение тени
+        shadowOpacity: 0.3, // Прозрачность тени
+        shadowRadius: 6, // Радиус размытия тени
+        elevation: 10, // Тень для Android
+    },
+    opacityStyle: {
+        backgroundColor: '#046ef0', 
+        padding: 10,
+        marginBottom: 8, 
+        alignItems: 'center', 
+        borderRadius: 25,
+        shadowColor: 'black', // Цвет тени
+        shadowOffset: { width: 0, height: 4 }, // Смещение тени
+        shadowOpacity: 0.3, // Прозрачность тени
+        shadowRadius: 6, // Радиус размытия тени
+        elevation: 10, // Тень для Android
+    },
     opacityTextStyle: {color: 'white', fontSize: 30, fontWeight: '400', fontFamily: 'helvetica'}
 })
 

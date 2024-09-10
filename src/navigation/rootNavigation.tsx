@@ -9,9 +9,10 @@ import CheckOtpPassRecScreen from '../screens/checkOtpPassRecScreen';
 import NewPassScreen from '../screens/newPassScreen';
 import ForgPassScreen from '../screens/forgottenPassScreen';
 import { useAppDispatch, useAppSelector } from '../redux/store/hooks';
-import { supabase } from '../api';
+import { getUser, supabase } from '../api';
 import { setSession } from '../redux/features/sessionSlice';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Text, View } from 'react-native';
+import { setUser } from '../redux/features/userSlice';
 
 
 const Stack = createNativeStackNavigator();
@@ -23,14 +24,39 @@ const MyStack = () => {
     const dispatch = useAppDispatch()
     const [loading, setLoading] = React.useState(true);
 
+
+
+    const getUserFullData = async () => {
+        try{
+            const {user, error} = await getUser()
+            if(error){
+                if (error.message==="User from sub claim in JWT does not exist"){
+                    Alert.alert('Ошибка', 'Зарегистрируйте аккаунт!');
+                    return;
+                }
+                console.error(error)
+                Alert.alert("Ошибка", error.message)
+            }
+            user && dispatch(setUser(user))
+        }
+        catch (error) {
+            Alert.alert('Неизвестная ошибка', 'Что-то пошло не так!');
+        }
+    }
+
+
+
+
     React.useEffect(() => {
         setLoading(true)
         const {data: authListener} = supabase.auth.onAuthStateChange((event, session) => {
-            if(event === 'PASSWORD_RECOVERY'){
-                dispatch(setSession(false))
-            }
-            else if(session){
-                dispatch(setSession(true))
+            if(session){
+                if(event === 'PASSWORD_RECOVERY'){
+                    dispatch(setSession(false))
+                }
+                else{
+                    dispatch(setSession(true))   
+                }
             }
             else{
                 dispatch(setSession(false))
@@ -39,6 +65,7 @@ const MyStack = () => {
         const checkSession = async () => {
             const { data: {session}} = await supabase.auth.getSession()
             if(session){
+                await getUserFullData();
                 dispatch(setSession(true))
             }
             else{
@@ -54,23 +81,26 @@ const MyStack = () => {
 
     }, [])
 
-    if(loading) return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}><ActivityIndicator style={{alignSelf: 'center'}} size="large"/></View>
+    if(loading){
+        return(
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <ActivityIndicator style={{alignSelf: 'center'}} size="large"/>
+            </View>
+        )
+    }
 
     return(
         <NavigationContainer>
             { session ? 
-            <Stack.Navigator>
-                 
+            <Stack.Navigator>       
                 <Stack.Screen
                     name = 'profile'
                     component = {ProfileScreen}
                     options = {{title: 'Profile'}}
                 />
-            
             </Stack.Navigator> 
             :
             <Stack.Navigator>
-
                 <Stack.Screen
                     name = 'authorization'
                     component = {AuthorizationScreen}

@@ -46,7 +46,7 @@ export const getUser = async () => {
     const { data: fullUserInfo, error } = await supabase 
         .from('users')
         .select('*')
-        .eq('email', user?.email)
+        .eq('userID', user?.id)
         if (error) {
             return { user: null, error };
         } 
@@ -62,7 +62,7 @@ export const setUser = async(id: string, name: string, surname: string, email: s
         .insert([
             { userID: id, name: name, surname: surname, email: email, birthday: date, gender: gender },
         ])
-        .select()
+        .select()                     
     return {user: data, error: null}
 }
 

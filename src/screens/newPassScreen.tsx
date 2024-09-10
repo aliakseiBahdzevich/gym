@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { ImageBackground, View, TouchableOpacity, Text, TextInput, Alert, StyleSheet } from 'react-native';
-import { passRecovery, updateUser } from '../api';
+import { getUser, passRecovery, setUser, updateUser } from '../api';
+import { useAppDispatch } from '../redux/store/hooks';
+import{ setUser as setUserAction }  from '../redux/features/userSlice'
 
 
 const NewPassScreen = ({navigation, route}: any) => {
@@ -17,6 +19,7 @@ const NewPassScreen = ({navigation, route}: any) => {
 
     const [password, setPassword] = useState('');
     const [openPass, setOpenPass] = useState(Boolean)
+    const dispatch = useAppDispatch();
 
 
     const handlePassword = (inputText: any) => {
@@ -28,11 +31,15 @@ const NewPassScreen = ({navigation, route}: any) => {
         try {
             const { user, error } = await updateUser(route.params.email, password);
             if (error) {
-                Alert.alert('Ошибка', error.message);
+                if(error.message==='New password should be different from the old password.'){
+                    Alert.alert('Ошибка', 'Новый пароль должен отличаться от старого!');
+                    return;
+                }
             }
             Alert.alert('Успешно', 'Вы успешно сменили пароль!');
-            ()=>navigation.navigate('profile')
-            console.log(user)
+            const {user: userResponce} = await getUser();
+            userResponce && dispatch(setUserAction(userResponce))
+            
         } 
         catch (error) {
             console.error('Неизвестная ошибка:', error);
@@ -55,7 +62,7 @@ const NewPassScreen = ({navigation, route}: any) => {
                 placeholder='новый пароль'
                 placeholderTextColor='rgba(0, 0, 0, 0.4)'
                 secureTextEntry
-                style={ openPass ? [styles.inputTextStyle, {borderColor: 'black'}] : [styles.inputTextStyle, {borderColor: 'rgba(0, 0, 0, 0.4)'}]}
+                style={ openPass ? [styles.inputTextStyle, {borderColor: 'black', borderWidth: 1}] : styles.inputTextStyle}
             />
             <TouchableOpacity onPress={newPassword} style={styles.opacityStyle}>
                 <Text style={styles.opacityTextStyle}>Сменить пароль</Text>
@@ -70,7 +77,14 @@ const styles = StyleSheet.create({
     viewHeaderStyle: {flexDirection: 'column', marginBottom: 20},
     viewMainTextHeaderStyle: {fontSize: 30, fontWeight: '700', fontFamily: 'helvetica'},
     viewTextHeaderStyle: {fontSize: 20, fontWeight: '300', fontFamily: 'helvetica', paddingTop: 10},
-    inputTextStyle: {borderWidth: 1, marginBottom: 10, fontSize: 25, borderRadius: 15, padding: 10, fontFamily: 'helvetica'},
+    inputTextStyle: { 
+        marginBottom: 10, 
+        fontSize: 25, 
+        borderRadius: 15, 
+        padding: 10, 
+        fontFamily: 'helvetica',
+        backgroundColor: 'white'
+    },
     opacityStyle: {backgroundColor: '#f06204', padding: 10, marginBottom: 8, alignItems: 'center', borderRadius: 25},
     opacityTextStyle: {color: 'white', fontSize: 30, fontWeight: '400', fontFamily: 'helvetica'}
 })

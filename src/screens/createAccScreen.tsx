@@ -99,7 +99,7 @@ const CreateAccScreen = ({navigation}: any) => {
                     value={name}
                     placeholder='имя'
                     placeholderTextColor='rgba(0, 0, 0, 0.4)'
-                    style={ openName ? [styles.inputTextNameStyle, {borderColor: 'black'}] : [styles.inputTextNameStyle, {borderColor: 'rgba(0, 0, 0, 0.4)'}]}
+                    style={ openName ? [styles.inputTextNameStyle, {borderColor: 'black', borderWidth: 1}] : styles.inputTextNameStyle}
                 />
                 <View style={{width: 8}}></View>
                 <TextInput
@@ -109,7 +109,7 @@ const CreateAccScreen = ({navigation}: any) => {
                     value={surname}
                     placeholder='фамилия'
                     placeholderTextColor='rgba(0, 0, 0, 0.4)'
-                    style={ openSurname ? [styles.inputTextNameStyle, {borderColor: 'black'}] : [styles.inputTextNameStyle, {borderColor: 'rgba(0, 0, 0, 0.4)'}]}
+                    style={ openSurname ? [styles.inputTextNameStyle, {borderColor: 'black', borderWidth: 1}] : styles.inputTextNameStyle}
                 />
             </View>
             <View style={{marginBottom: 10}}>
@@ -121,7 +121,7 @@ const CreateAccScreen = ({navigation}: any) => {
                     formHorizontal={true}
                     labelHorizontal={true}
                     buttonColor={'#869aab'}
-                    selectedButtonColor={'#046ef0'}
+                    selectedButtonColor={'rgba(0,125,255,255)'}
                     animation={true}
                     style={{
                         flexDirection: 'row',
@@ -158,7 +158,7 @@ const CreateAccScreen = ({navigation}: any) => {
                 value={email}
                 placeholder='почта'
                 placeholderTextColor='rgba(0, 0, 0, 0.4)'
-                style={ openEmail ? [styles.inputTextStyle, {borderColor: 'black'}] : [styles.inputTextStyle, {borderColor: 'rgba(0, 0, 0, 0.4)'}]}
+                style={ openEmail ? [styles.inputTextStyle, {borderColor: 'black', borderWidth: 1}] : styles.inputTextStyle}
                 />
             <TextInput
                 onChangeText={handlePassword}
@@ -168,7 +168,7 @@ const CreateAccScreen = ({navigation}: any) => {
                 placeholder='пароль'
                 placeholderTextColor='rgba(0, 0, 0, 0.4)'
                 secureTextEntry
-                style={ openPass ? [styles.inputTextStyle, {borderColor: 'black'}] : [styles.inputTextStyle, {borderColor: 'rgba(0, 0, 0, 0.4)'}]}
+                style={ openPass ? [styles.inputTextStyle, {borderColor: 'black', borderWidth: 1}] : styles.inputTextStyle}
                 />
             <TouchableOpacity onPress={createAccountFun} style={styles.opacityStyle}>
                 <Text style={styles.opacityTextStyle}>Далее</Text>
@@ -178,17 +178,62 @@ const CreateAccScreen = ({navigation}: any) => {
 }
 
 const styles = StyleSheet.create({
-    mainViewStyle: {padding: 20},
+    mainViewStyle: {padding: 20, backgroundColor: 'rgba(239,238,244,255)'},
     viewHeaderStyle: {flexDirection: 'column', marginBottom: 20},
     viewMainTextHeaderStyle: {fontSize: 30, fontWeight: '700', fontFamily: 'helvetica'},
     viewTextHeaderStyle: {fontSize: 20, fontWeight: '300', fontFamily: 'helvetica', paddingTop: 10},
     viewNameStyle: {flexDirection: 'row', marginBottom: 10},
-    inputTextNameStyle: {flex: 1, borderWidth: 1, fontSize: 25, borderRadius: 15, padding: 10, fontFamily: 'helvetica'},
-    opacityDateStyle: { padding: 10, marginBottom: 10, borderRadius: 15, borderColor: 'rgba(0, 0, 0, 0.4)', borderWidth: 1},
+    inputTextNameStyle: {
+        flex: 1, 
+        fontSize: 25, 
+        borderRadius: 15, 
+        padding: 10, 
+        fontFamily: 'helvetica',
+        backgroundColor: 'white',
+        shadowColor: 'black', // Цвет тени
+        shadowOffset: { width: 0, height: 4 }, // Смещение тени
+        shadowOpacity: 0.3, // Прозрачность тени
+        shadowRadius: 6, // Радиус размытия тени
+        elevation: 10, // Тень для Android
+    },
+    opacityDateStyle: { 
+        padding: 10, 
+        marginBottom: 10, 
+        borderRadius: 15, 
+        backgroundColor: 'white',
+        shadowColor: 'black', // Цвет тени
+        shadowOffset: { width: 0, height: 4 }, // Смещение тени
+        shadowOpacity: 0.3, // Прозрачность тени
+        shadowRadius: 6, // Радиус размытия тени
+        elevation: 10, // Тень для Android
+    },
     opacityDefaultTextDateStyle: { color: 'rgba(0, 0, 0, 0.4)', fontSize: 25, fontFamily: 'helvetica'},
     opacityCheckTextDateStyle: { color: 'rgba(0, 0, 0, 1)', fontSize: 25, fontFamily: 'helvetica'},
-    inputTextStyle: {borderWidth: 1, marginBottom: 10, fontSize: 25, borderRadius: 15, padding: 10, fontFamily: 'helvetica'},
-    opacityStyle: {backgroundColor: '#046ef0', padding: 10, marginBottom: 8, alignItems: 'center', borderRadius: 25},
+    inputTextStyle: {
+        marginBottom: 10,
+        fontSize: 25,
+        borderRadius: 15,
+        padding: 10,
+        fontFamily: 'helvetica',
+        backgroundColor: 'white',
+        shadowColor: 'black', // Цвет тени
+        shadowOffset: { width: 0, height: 4 }, // Смещение тени
+        shadowOpacity: 0.3, // Прозрачность тени
+        shadowRadius: 6, // Радиус размытия тени
+        elevation: 10, // Тень для Android
+    },
+    opacityStyle: {
+        backgroundColor: 'rgba(0,125,255,255)',
+        padding: 10,
+        marginBottom: 8,
+        alignItems: 'center',
+        borderRadius: 25,
+        shadowColor: 'black', // Цвет тени
+        shadowOffset: { width: 0, height: 4 }, // Смещение тени
+        shadowOpacity: 0.3, // Прозрачность тени
+        shadowRadius: 6, // Радиус размытия тени
+        elevation: 10, // Тень для Android
+    },
     opacityTextStyle: {color: 'white', fontSize: 30, fontWeight: '400', fontFamily: 'helvetica'}
 })
 
