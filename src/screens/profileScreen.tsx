@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { ImageBackground, View, TouchableOpacity, Text, Alert, StyleSheet } from 'react-native';
+import { ImageBackground, View, TouchableOpacity, Text, Alert, StyleSheet, Image, Button } from 'react-native';
 import { getUser, passRecovery, supabase, User } from '../api';
 import { useAppDispatch, useAppSelector } from '../redux/store/hooks';
 import { store } from '../redux/store/store';
 import { setUser } from '../redux/features/userSlice';
+import { Asset, launchImageLibrary } from 'react-native-image-picker';
 
 
 const ProfileScreen = ({navigation, route}: any) => {
@@ -17,6 +18,49 @@ const ProfileScreen = ({navigation, route}: any) => {
         dispatch(setUser(null))
     }
 
+    const [avatarUri, setAvatarUri] = useState<string>('');
+
+    const uploadPhoto = async () => {
+        // Открытие галереи для выбора фото
+        launchImageLibrary({ mediaType: 'photo' }, async (response) => {
+          if (response.didCancel) {
+            Alert.alert('Отмена launchImageLibrary', 'Вы не выбрали фото.');
+          } else if (response.errorCode) {
+            Alert.alert('Ошибка launchImageLibrary', response.errorMessage);
+          } else if(response.assets) {
+            const file = response.assets[0];
+            const filePath = `avatars/${file.fileName}`;
+      
+            // Преобразование в нужный формат
+            const formData = new FormData();
+            formData.append('file', {
+              uri: file.uri,
+              name: file.fileName,
+              type: file.type,
+            });
+      
+            try {
+              // Загрузка файла в хранилище Supabase
+              const { data, error } = await supabase.storage
+                .from('avatars') // укажи своё хранилище
+                .upload(filePath, formData);
+                
+              if (error) throw error;
+              const { data: { signedUrl }, error: signedUrlError } = await supabase.storage
+                .from('avatars')
+                .createSignedUrl(filePath, 60 * 60);
+
+              setAvatarUri(signedUrl)
+              Alert.alert('Успех', 'Файл успешно загружен!');
+            } catch (error) {
+                console.log(error.message)
+              Alert.alert('Ошибка supabase', error.message);
+            }
+          }
+        });
+      };
+
+      console.log(avatarUri);
     return(
         <>
         <View style={styles.viewMainStyle}>
@@ -26,7 +70,14 @@ const ProfileScreen = ({navigation, route}: any) => {
                     <Text style = {styles.viewTextNameStyle}>{user?.surname}</Text>
                 </View>
                 <View style={styles.viewAvatarStyle}>
-                    <Text>аватарка</Text>
+                    <TouchableOpacity onPress={uploadPhoto} style={{borderWidth: 2, padding: 10, borderColor: 'black'}}>
+                    {avatarUri && (
+                    <Image
+                        source={{ uri: avatarUri }}
+                        style={{ width: 100, height: 100, marginTop: 20 }}
+                    />
+                    )}
+                    </TouchableOpacity>
                 </View>   
             </View>  
             <View style={[styles.viewHeaderStyle, {flexDirection: 'column', alignItems: 'baseline'}]}>
@@ -55,6 +106,7 @@ const ProfileScreen = ({navigation, route}: any) => {
         </>
     )
 }
+
 
 const styles = StyleSheet.create({
     viewMainStyle: {padding: 15, flex: 1, backgroundColor: 'rgba(239,238,244,255)'},

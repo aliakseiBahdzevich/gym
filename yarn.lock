@@ -3557,12 +3557,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@supabase/auth-js@npm:2.64.4":
-  version: 2.64.4
-  resolution: "@supabase/auth-js@npm:2.64.4"
+"@supabase/auth-js@npm:2.65.0":
+  version: 2.65.0
+  resolution: "@supabase/auth-js@npm:2.65.0"
   dependencies:
     "@supabase/node-fetch": ^2.6.14
-  checksum: 05d7f40e67a89ba561c47ce7f398f1979d19a89b6a9e90c25fcd591b2b0fa161d9f1edf50777eeeb256468a1e479557c2d07d966d7b312e188ffca9758823213
+  checksum: c6396f6c384f4787352a09e40c192cbf990dd566773b6e55eb7921726052144bfe592e2550bd1bd743545af3a03b2602ef41a9e69f9f966f84923049d0128404
   languageName: node
   linkType: hard
 
@@ -3584,12 +3584,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@supabase/postgrest-js@npm:1.15.8":
-  version: 1.15.8
-  resolution: "@supabase/postgrest-js@npm:1.15.8"
+"@supabase/postgrest-js@npm:1.16.1":
+  version: 1.16.1
+  resolution: "@supabase/postgrest-js@npm:1.16.1"
   dependencies:
     "@supabase/node-fetch": ^2.6.14
-  checksum: b2081f76356f35f76e9e6f2e1b4dd1528c96404f4feeebf1ebb8068fb726e182c06f77cbd151c00d751ad9d69bcab4596dd68bf5c90ee7ace2ac22695bed3268
+  checksum: 695d41c935c8745a16ee3b597fe2d1b94ba69715f3b15da8f1e332ef4a556e41ba0591889fa37cadb53900e2c58f4298ece4dd13e35f6b25fbeb54c3e0aabc90
   languageName: node
   linkType: hard
 
@@ -3605,26 +3605,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@supabase/storage-js@npm:2.6.0":
-  version: 2.6.0
-  resolution: "@supabase/storage-js@npm:2.6.0"
+"@supabase/storage-js@npm:2.7.0":
+  version: 2.7.0
+  resolution: "@supabase/storage-js@npm:2.7.0"
   dependencies:
     "@supabase/node-fetch": ^2.6.14
-  checksum: ade54ef113922c43f4b46080b5ee637fad07117e4e16383ce0d040981a550a6f3fc0edc4f20dd8677cb28bb46b4071be130df86944ce7a9abe68bb86b955a832
+  checksum: 1796214103d0afae0d9e960bd22cbd621f746a845c56e409a5a7fa88cbdfcec6a53ac0ffb6b5197ec88540c8c17a5cc888ec3edf5928b48b83bb7f315a17465c
   languageName: node
   linkType: hard
 
-"@supabase/supabase-js@npm:^2.45.1":
-  version: 2.45.1
-  resolution: "@supabase/supabase-js@npm:2.45.1"
+"@supabase/supabase-js@npm:^2.45.4":
+  version: 2.45.4
+  resolution: "@supabase/supabase-js@npm:2.45.4"
   dependencies:
-    "@supabase/auth-js": 2.64.4
+    "@supabase/auth-js": 2.65.0
     "@supabase/functions-js": 2.4.1
     "@supabase/node-fetch": 2.6.15
-    "@supabase/postgrest-js": 1.15.8
+    "@supabase/postgrest-js": 1.16.1
     "@supabase/realtime-js": 2.10.2
-    "@supabase/storage-js": 2.6.0
-  checksum: 05dc75d94acea4397a93211d334dfb1d67683d4fa1457baa9b8af53dfcd8159faa4d3bd80afab3b065d8ddb6b31f0b94f746304889b8a82b7d4011f763aa7266
+    "@supabase/storage-js": 2.7.0
+  checksum: 5611e13a1ffd0e0773148eccdadcf746240b4d47dfe771220793c3f6ec2d8eedef638d27aa23a2b020bce3fb68efda511d4e9746792e7524349f7e17bd53eb99
   languageName: node
   linkType: hard
 
@@ -7084,7 +7084,7 @@ __metadata:
     "@react-navigation/native-stack": ^6.11.0
     "@reduxjs/toolkit": ^2.2.7
     "@rneui/themed": ^4.0.0-rc.8
-    "@supabase/supabase-js": ^2.45.1
+    "@supabase/supabase-js": ^2.45.4
     "@types/aes-js": ^3.1.4
     "@types/react": ^18.2.6
     "@types/react-native-datepicker": ^1.7.6
@@ -7108,6 +7108,7 @@ __metadata:
     react-native-datepicker: ^1.7.2
     react-native-get-random-values: ^1.11.0
     react-native-global-font: ^1.0.3
+    react-native-image-picker: ^7.1.2
     react-native-material-ui: ^1.30.1
     react-native-otp-inputs: ^7.4.0
     react-native-paper: ^5.12.5
@@ -10586,6 +10587,16 @@ __metadata:
   dependencies:
     lodash.wrap: ^4.1.1
   checksum: adbcba5af7374bb1e6e6b6b6436a0c9780d9ec2eedf76cfc29ddc9bdf1f8a62125c2aa5332fb4f83140f731b4ccba2eea323559bb6fcd1007167d78c9822c657
+  languageName: node
+  linkType: hard
+
+"react-native-image-picker@npm:^7.1.2":
+  version: 7.1.2
+  resolution: "react-native-image-picker@npm:7.1.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: af52328b7cb06c28549442f0d923cfa92dde8d5a968a642336df4c882f81adbf0e5e606a14de27f96883a76fa1e03230061c4080011c9107942edebc8e09c478
   languageName: node
   linkType: hard
 
