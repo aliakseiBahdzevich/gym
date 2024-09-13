@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { ImageBackground, View, TouchableOpacity, Text, Alert, StyleSheet, Image, Button } from 'react-native';
-import { getUser, passRecovery, supabase, User } from '../api';
+import { getUser, passRecovery, supabase, updateUser, updateUserAvatar, User } from '../api';
 import { useAppDispatch, useAppSelector } from '../redux/store/hooks';
 import { store } from '../redux/store/store';
 import { setUser } from '../redux/features/userSlice';
@@ -18,7 +18,7 @@ const ProfileScreen = ({navigation, route}: any) => {
         dispatch(setUser(null))
     }
 
-    const [avatarUri, setAvatarUri] = useState<string>('');
+    const [avatarUri, setAvatarUri] = useState<string | undefined>('');
 
     const uploadPhoto = async () => {
         // Открытие галереи для выбора фото
@@ -51,6 +51,10 @@ const ProfileScreen = ({navigation, route}: any) => {
                 .createSignedUrl(filePath, 60 * 60);
 
               setAvatarUri(signedUrl)
+              avatarUri && updateUserAvatar(avatarUri)
+              const {user: userResponce} = await getUser();
+              userResponce && dispatch(setUser(userResponce))
+              
               Alert.alert('Успех', 'Файл успешно загружен!');
             } catch (error) {
                 console.log(error.message)
@@ -59,8 +63,11 @@ const ProfileScreen = ({navigation, route}: any) => {
           }
         });
       };
+      // const {user: userResponce} = await getUser();
+      // userResponce && dispatch(setUser(userResponce))
 
-      console.log(avatarUri);
+      console.log('123', avatarUri);
+      console.log('avatar', user?.avatar)
     return(
         <>
         <View style={styles.viewMainStyle}>
@@ -70,11 +77,11 @@ const ProfileScreen = ({navigation, route}: any) => {
                     <Text style = {styles.viewTextNameStyle}>{user?.surname}</Text>
                 </View>
                 <View style={styles.viewAvatarStyle}>
-                    <TouchableOpacity onPress={uploadPhoto} style={{borderWidth: 2, padding: 10, borderColor: 'black'}}>
+                    <TouchableOpacity onPress={uploadPhoto} style={styles.viewAvatarStyle}>
                     {avatarUri && (
                     <Image
-                        source={{ uri: avatarUri }}
-                        style={{ width: 100, height: 100, marginTop: 20 }}
+                        source={{ uri: user?.avatar }}
+                        style={styles.viewAvatarStyle}
                     />
                     )}
                     </TouchableOpacity>

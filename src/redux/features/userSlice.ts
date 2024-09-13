@@ -14,7 +14,8 @@ const initialState: UserState = {
     name: '',
     surname: '',
     birthday: '',
-    gender: ''
+    gender: '',
+    avatar: '',
   },
 }
 

@@ -2,16 +2,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { EmailOtpType, MobileOtpType, createClient } from '@supabase/supabase-js'
 import 'react-native-get-random-values'
 import 'react-native-url-polyfill/auto'
+import userSlice from '../redux/features/userSlice'
+import{ setUser as setUserAction }  from '../redux/features/userSlice'
+import { useAppSelector, useAppDispatch } from '../redux/store/hooks'
 
 const supabaseUrl = 'https://zfousekokwvlzswkizbq.supabase.co'
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpmb3VzZWtva3d2bHpzd2tpemJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjQwNjc1MTcsImV4cCI6MjAzOTY0MzUxN30.kRjQUzrpbMirGhbmR46uHqgXZCMWiHiIorCvawh7ZOY'
+// сonst user = useAppSelector(store=> store.user.user)
+// const dispatch = useAppDispatch()
 
 export type User = {
     email: string,
     name: string,
     surname: string,
     birthday: string,
-    gender: string
+    gender: string,
+    avatar: string 
 }
 
 export const supabase = createClient(supabaseUrl, supabaseKey, {
@@ -37,6 +43,20 @@ export const checkUserExist = async (email: string) => {
     }
 }
 
+
+export const updateUserAvatar = async(avatar: string) => {
+    const { data: {user}, error: getUserError } = await supabase.auth.getUser()
+    if (getUserError) {
+        return { user: null, error: getUserError };
+    }
+    const { data, error } = await supabase
+        .from('users')
+        .update({ avatar: avatar })
+        .eq('userID', user?.id)
+        .select()
+    return {user: data, error: null}
+}
+
 export const getUser = async () => {
     const { data: {user}, error: getUserError } = await supabase.auth.getUser()
     if (getUserError) {
@@ -60,7 +80,7 @@ export const setUser = async(id: string, name: string, surname: string, email: s
     const { data, error } = await supabase
         .from('users')
         .insert([
-            { userID: id, name: name, surname: surname, email: email, birthday: date, gender: gender },
+            { userID: id, name: name, surname: surname, email: email, birthday: date, gender: gender},
         ])
         .select()                     
     return {user: data, error: null}
