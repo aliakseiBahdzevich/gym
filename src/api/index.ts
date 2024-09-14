@@ -49,12 +49,18 @@ export const updateUserAvatar = async(avatar: string) => {
     if (getUserError) {
         return { user: null, error: getUserError };
     }
-    const { data, error } = await supabase
+    const { data: fullUserInfo, error } = await supabase
         .from('users')
         .update({ avatar: avatar })
         .eq('userID', user?.id)
         .select()
-    return {user: data, error: null}
+        if (error) {
+            return { user: null, error };
+        } 
+        else {
+            const responce: {user: User, error: any} = { user: fullUserInfo[0], error: null }; 
+            return responce;
+        }
 }
 
 export const getUser = async () => {

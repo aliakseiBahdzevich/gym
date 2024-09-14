@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { ImageBackground, View, TouchableOpacity, Text, Alert, StyleSheet, Image, Button } from 'react-native';
+import { ImageBackground, View, TouchableOpacity, Text, Alert, StyleSheet, Image, Button, ActivityIndicator } from 'react-native';
 import { getUser, passRecovery, supabase, updateUser, updateUserAvatar, User } from '../api';
 import { useAppDispatch, useAppSelector } from '../redux/store/hooks';
 import { store } from '../redux/store/store';
@@ -18,7 +18,7 @@ const ProfileScreen = ({navigation, route}: any) => {
         dispatch(setUser(null))
     }
 
-    const [avatarUri, setAvatarUri] = useState<string | undefined>('');
+    const [loading, setLoading] = React.useState(false);
 
     const uploadPhoto = async () => {
         // Открытие галереи для выбора фото
@@ -40,34 +40,47 @@ const ProfileScreen = ({navigation, route}: any) => {
             });
       
             try {
+              setLoading(true)
               // Загрузка файла в хранилище Supabase
               const { data, error } = await supabase.storage
                 .from('avatars') // укажи своё хранилище
-                .upload(filePath, formData);
-                
-              if (error) throw error;
+                .upload(filePath, formData);  
+              if (error){
+                console.log('error', error.message)
+              }
               const { data: { signedUrl }, error: signedUrlError } = await supabase.storage
                 .from('avatars')
                 .createSignedUrl(filePath, 60 * 60);
-
-              setAvatarUri(signedUrl)
-              avatarUri && updateUserAvatar(avatarUri)
-              const {user: userResponce} = await getUser();
-              userResponce && dispatch(setUser(userResponce))
-              
-              Alert.alert('Успех', 'Файл успешно загружен!');
+              if (signedUrlError) {
+                console.log('Create Signed URL Error:', signedUrlError.message);
+                Alert.alert('Ошибка URL', signedUrlError.message);
+                return;
+              }
+            
+              if (signedUrl){
+                const {user: userResponce} = await updateUserAvatar(signedUrl);
+                userResponce && dispatch(setUser(userResponce))
+                console.log(userResponce  )
+                Alert.alert('Успех', 'Файл успешно загружен!');
+              }
+              setLoading(false)
             } catch (error) {
-                console.log(error.message)
               Alert.alert('Ошибка supabase', error.message);
             }
           }
         });
       };
-      // const {user: userResponce} = await getUser();
-      // userResponce && dispatch(setUser(userResponce))
 
-      console.log('123', avatarUri);
-      console.log('avatar', user?.avatar)
+      console.log('User Avatar:', user?.avatar);
+
+      if(loading){
+        return(
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <ActivityIndicator style={{alignSelf: 'center'}} size="large"/>
+            </View>
+        )
+      } 
+
     return(
         <>
         <View style={styles.viewMainStyle}>
@@ -78,12 +91,10 @@ const ProfileScreen = ({navigation, route}: any) => {
                 </View>
                 <View style={styles.viewAvatarStyle}>
                     <TouchableOpacity onPress={uploadPhoto} style={styles.viewAvatarStyle}>
-                    {avatarUri && (
-                    <Image
+                    {user?.avatar===''?<Text>avatar</Text>:<Image
                         source={{ uri: user?.avatar }}
                         style={styles.viewAvatarStyle}
-                    />
-                    )}
+                    />}
                     </TouchableOpacity>
                 </View>   
             </View>  
